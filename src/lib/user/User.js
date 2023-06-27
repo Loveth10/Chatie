@@ -1,6 +1,5 @@
 /* Filename: User.js
- * Developer: Iwuji Jude
- * Description: This contains the user logic, It a class that defines the related user 
+ * Description: This contains the user logic, It a class that defines the related user
  * activities
  */
 
@@ -18,8 +17,7 @@ const Users = mongoose.model('users');
 const defaults = require('../../config/setup');
 
 //-- Friend module
-const {isMyFriend} = require('./Friend');
-
+const { isMyFriend } = require('./Friend');
 
 /**
  * @description This function inserts a new user to the database
@@ -29,10 +27,8 @@ const {isMyFriend} = require('./Friend');
 async function insertUser(userData = {}) {
   //-- insert a new user
   return new Promise((resolve, reject) => {
-
     let newUser = new Users(userData);
     bcrypt.genSalt(12, (err, salt) => {
-
       if (err) console.log(err);
 
       bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -40,24 +36,23 @@ async function insertUser(userData = {}) {
 
         newUser.password = hash;
 
-        newUser.save()
-          .then(user => {
+        newUser
+          .save()
+          .then((user) => {
             if (user) {
               resolve(true);
             } else {
-              reject("Sorry, the system encountered an error.");
+              reject('Sorry, the system encountered an error.');
             }
           })
-          .catch(errMsg => {
-            reject("Failed to signup the user.");
+          .catch((errMsg) => {
+            reject('Failed to signup the user.');
             console.log(errMsg);
           });
       });
-
     });
   });
 }
-
 
 /**
  * @description This function search and retrieves users from the database
@@ -65,12 +60,11 @@ async function insertUser(userData = {}) {
  * @returns Promise
  */
 async function findUserByUserName(userName) {
-
   let user = false;
 
   try {
     user = await Users.findOne({
-      userName: userName
+      userName: userName,
     });
   } catch (e) {
     console.log(e);
@@ -80,7 +74,7 @@ async function findUserByUserName(userName) {
   //-- returns a Promise
   return new Promise((resolve, reject) => {
     if (user !== {} && user !== null) {
-      resolve(user)
+      resolve(user);
     } else {
       resolve(false);
     }
@@ -93,12 +87,11 @@ async function findUserByUserName(userName) {
  * @returns Promise
  */
 async function findUserByEmail(email) {
-
   let user = {};
 
   try {
     user = await Users.findOne({
-      emailAddress: email
+      emailAddress: email,
     });
   } catch (e) {
     console.log(e);
@@ -108,23 +101,18 @@ async function findUserByEmail(email) {
   //-- returns a Promise
   return new Promise((resolve, reject) => {
     if (user !== {} && user !== null) {
-      return resolve(user)
+      return resolve(user);
     } else {
       return resolve(false);
     }
   });
 }
 
-
-
-
 async function formatUserData(userData) {
   let formattedUserData = [];
-  
+
   if (userData instanceof Array && userData.length > 0) {
-
     for (const data of userData) {
-
       formattedUserData.push({
         userName: data.userName,
         profilePics: data.pictureDir || defaults.profilePics,
@@ -139,10 +127,9 @@ async function formatUserData(userData) {
   }
 }
 
-
 /**
  * @description This function searches for all users that the supplied userName matches
- * @param {String} userName 
+ * @param {String} userName
  * @returns Promise<boolean> | Promise<Object>
  * @author Iwuji Jude
  */
@@ -154,9 +141,9 @@ async function findUsersByUserName(userName, user_id) {
 
   try {
     users = await Users.find({
-      userName: userName
+      userName: userName,
     }).sort({
-      userName: 'asc'
+      userName: 'asc',
     });
   } catch (err) {
     throw err;
@@ -170,18 +157,16 @@ async function findUsersByUserName(userName, user_id) {
   }
 }
 
-
-async function filterUserSearch(user_id, users){
+async function filterUserSearch(user_id, users) {
   let filteredUsers = [];
-  if(user_id && (users instanceof Array)) {
+  if (user_id && users instanceof Array) {
     for (const user of users) {
       //-- this ensures that the current user is not added to the list
-      
-      if(String(user._id) !== user_id){
 
+      if (String(user._id) !== user_id) {
         let isMyFriend_ = await isMyFriend(user_id, user._id);
         //-- Ensure that only users that are not my friend are added to the list
-        if(!isMyFriend_){ 
+        if (!isMyFriend_) {
           filteredUsers.push(user);
         }
       }
@@ -191,11 +176,9 @@ async function filterUserSearch(user_id, users){
   return Promise.resolve(filteredUsers);
 }
 
-
-
 module.exports = {
   insertUser,
   findUserByUserName,
   findUserByEmail,
-  findUsersByUserName
+  findUsersByUserName,
 };

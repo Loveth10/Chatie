@@ -1,5 +1,4 @@
 /* Filename: User.js
- * Developer: Iwuji Jude
  * Description: This module is used to validate data captured in user inputs
  * Date: 07-Nov-2018
  * At: 4:26

@@ -160,13 +160,13 @@ app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
     let profilePics = req.user.pictureDir || '/core/img/user.png';
     res.render('user/index', {
-      pageTitle: 'XrayTalk | ' + req.user.userName,
+      pageTitle: 'Chatie | ' + req.user.userName,
       user: req.user,
       profilePics,
     });
   } else {
     res.render('guest/index', {
-      pageTitle: 'XrayTalk',
+      pageTitle: 'Chatie',
     });
   }
 });

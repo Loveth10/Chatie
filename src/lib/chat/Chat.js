@@ -1,9 +1,5 @@
 /* Filename: Chat.js
- * Developer: Iwuji Jude
  * Decription: This handles the chatting logic/functionality
- */
-/**
- * Module dependencies
  */
 const mongoose = require('mongoose');
 
@@ -17,27 +13,26 @@ const Users = mongoose.model('users');
 
 const validator = require('../utils/validator');
 
-
-function generateMessage(userID, message=null, chat_room_id=null){
+function generateMessage(userID, message = null, chat_room_id = null) {
   let generatedMessage = {};
 
-  if(!validator.isEmpty(message) ||!validator.isEmpty(chat_room_id)){
+  if (!validator.isEmpty(message) || !validator.isEmpty(chat_room_id)) {
     generatedMessage = {
       chat_room_id: validator.sanitize(chat_room_id),
       message: validator.sanitize(message),
-      mimeType: "message/text",
+      mimeType: 'message/text',
       createdAt: new Date(),
-      user_id: userID
-    }
+      user_id: userID,
+    };
   }
 
   return generatedMessage;
 }
 
 /**
- * 
- * @param {*} user_id 
- * @param {*} chats 
+ *
+ * @param {*} user_id
+ * @param {*} chats
  */
 async function formatChat(user_id = null, chats) {
   let formattedChats = [];
@@ -54,9 +49,9 @@ async function formatChat(user_id = null, chats) {
         tempObj.uid = user_id;
 
         if (user_id === String(user._id)) {
-          tempObj.userType = "user";
+          tempObj.userType = 'user';
         } else {
-          tempObj.userType = "friend";
+          tempObj.userType = 'friend';
         }
         formattedChats.push(tempObj);
       }
@@ -71,9 +66,9 @@ async function formatChat(user_id = null, chats) {
       tempObj.uid = user_id;
 
       if (user_id === user._id + '') {
-        tempObj.userType = "user";
+        tempObj.userType = 'user';
       } else {
-        tempObj.userType = "friend";
+        tempObj.userType = 'friend';
       }
       formattedChats.push(tempObj);
     }
@@ -81,48 +76,48 @@ async function formatChat(user_id = null, chats) {
   return Promise.resolve(formattedChats);
 }
 
-
 /**
- * 
- * @param {*} chatData 
+ *
+ * @param {*} chatData
  */
-async function insertChat(chatData={}){
+async function insertChat(chatData = {}) {
   if (!validator.isEmpty(chatData)) {
     let newMessage = {};
 
     try {
       newMessage = new Chats(chatData);
     } catch (err) {
-      return Promise.resolve({errMsg: 'Required fields are omitted.'});
+      return Promise.resolve({ errMsg: 'Required fields are omitted.' });
     }
 
-    if(!validator.isEmpty(newMessage)) {
+    if (!validator.isEmpty(newMessage)) {
       newMessage.save();
-      return formatChat(newMessage.user_id,newMessage);
-    }    
+      return formatChat(newMessage.user_id, newMessage);
+    }
   }
 
-  return Promise.resolve({errMsg: "Chat data not valid."})
+  return Promise.resolve({ errMsg: 'Chat data not valid.' });
 }
 
-
 /**
- * 
- * @param {*} room_id 
- * @param {*} limit 
- * @param {*} user_id 
+ *
+ * @param {*} room_id
+ * @param {*} limit
+ * @param {*} user_id
  */
 
-async function findChatsToLimit(room_id, limit=0, user_id){
+async function findChatsToLimit(room_id, limit = 0, user_id) {
   //-- setup the limit default value
-  if(limit === 0 || limit === undefined){
+  if (limit === 0 || limit === undefined) {
     limit = 25;
   }
 
-  let chats = await Chats.find({chat_room_id: room_id}).limit(limit).sort({createdAt: 'asc'});
+  let chats = await Chats.find({ chat_room_id: room_id })
+    .limit(limit)
+    .sort({ createdAt: 'asc' });
 
-  if(chats.length === 0){
-    return Promise.resolve({chats: false});
+  if (chats.length === 0) {
+    return Promise.resolve({ chats: false });
   } else {
     return formatChat(user_id, chats);
   }
@@ -131,5 +126,5 @@ async function findChatsToLimit(room_id, limit=0, user_id){
 module.exports = {
   generateMessage,
   insertChat,
-  findChatsToLimit
-}
+  findChatsToLimit,
+};
