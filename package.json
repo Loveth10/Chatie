@@ -1,37 +1,26 @@
 {
-  "name": "chatie",
+  "name": "chat-app",
   "version": "1.0.0",
-  "description": "A social media application.",
-  "main": "app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "mocha /src/utils/**/*.test.js"
+    "start": "node server/server.js",
+    "test": "mocha server/**/*.test.js",
+    "test-watch": "nodemon --exec \"npm test\""
   },
   "engines": {
-    "node": "18.16.0"
+    "node": "8.11.2"
   },
-  "keywords": [
-    "social",
-    "media",
-    "chat",
-    "talk"
-  ],
-  "author": "",
+  "author": "XrayBrain",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.18.3",
-    "connect-flash": "^0.1.1",
-    "express": "^4.16.4",
-    "express-handlebars": "^3.0.0",
-    "express-session": "^1.15.6",
-    "formidable": "^1.2.1",
-    "mongoose": "^7.3.0",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "serve-favicon": "^2.5.0",
-    "socket.io": "^2.1.1",
-    "validator": "^10.8.0",
-    "xss": "^1.0.3"
+    "express": "^4.16.3",
+    "moment": "^2.22.2",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.0.2",
+    "nodemon": "^1.18.1"
   }
 }
